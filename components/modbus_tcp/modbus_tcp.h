@@ -41,6 +41,3 @@ class ModbusTcpClient : public Component {
   bool process_response_();
   uint16_t calculate_crc_(const uint8_t *data, size_t length);
 };
-
-}  // namespace modbus_tcp
-}  // namespace esphome
