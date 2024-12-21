@@ -8,11 +8,11 @@ static const char *const TAG = "modbus_tcp";
 void ModbusTcpClient::setup() {
   ESP_LOGCONFIG(TAG, "Setting up Modbus TCP Client...");
   auto *eth = global_eth_component;
-  if (!eth->has_connected()) {
+  if (!eth->is_connected()) {
     ESP_LOGW(TAG, "Ethernet not connected yet");
     return;
   }
-  this->client_ = eth->create_client();
+  this->client_ = new Client();
   connect_();
 }
 
