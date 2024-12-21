@@ -1,8 +1,10 @@
 import esphome.codegen as cg
 import esphome.config_validation as cv
-from esphome.const import CONF_ID, CONF_HOST, CONF_PORT, CONF_UPDATE_INTERVAL
+from esphome.const import CONF_ID, CONF_PORT, CONF_UPDATE_INTERVAL
 
-DEPENDENCIES = ['ethernet']
+CONF_HOST= '192.168.1.5'
+
+DEPENDENCIES = ['wifi']
 AUTO_LOAD = ['sensor']
 
 CODEOWNERS = ['@github-aem']
