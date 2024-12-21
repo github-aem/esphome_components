@@ -7,12 +7,13 @@ static const char *const TAG = "modbus_tcp";
 
 void ModbusTcpClient::setup() {
   ESP_LOGCONFIG(TAG, "Setting up Modbus TCP Client...");
+  this->client_ = new WiFiClient();
   connect_();
 }
 
 void ModbusTcpClient::loop() {
   if (millis() - last_update_ >= update_interval_) {
-    if (!client_.connected()) {
+    if (!client_->connected()) {
       ESP_LOGW(TAG, "Connection lost, attempting to reconnect...");
       connect_();
     }
@@ -28,10 +29,10 @@ void ModbusTcpClient::dump_config() {
 }
 
 bool ModbusTcpClient::connect_() {
-  if (client_.connected())
+  if (client_->connected())
     return true;
 
-  if (!client_.connect(host_.c_str(), port_)) {
+  if (!client_->connect(host_.c_str(), port_)) {
     ESP_LOGE(TAG, "Connection to %s:%u failed!", host_.c_str(), port_);
     return false;
   }
@@ -41,8 +42,8 @@ bool ModbusTcpClient::connect_() {
 }
 
 void ModbusTcpClient::disconnect_() {
-  if (client_.connected())
-    client_.stop();
+  if (client_->connected())
+    client_->stop();
 }
 
 bool ModbusTcpClient::send_request_(uint8_t function_code, uint16_t address, uint16_t quantity) {
@@ -68,11 +69,11 @@ bool ModbusTcpClient::send_request_(uint8_t function_code, uint16_t address, uin
   request[4] = quantity & 0xFF;         // Quantity Lo
 
   // Send request
-  if (client_.write(header, 7) != 7) {
+  if (client_->write(header, 7) != 7) {
     ESP_LOGE(TAG, "Failed to send header");
     return false;
   }
-  if (client_.write(request, 5) != 5) {
+  if (client_->write(request, 5) != 5) {
     ESP_LOGE(TAG, "Failed to send request");
     return false;
   }
@@ -84,7 +85,7 @@ bool ModbusTcpClient::send_request_(uint8_t function_code, uint16_t address, uin
 bool ModbusTcpClient::process_response_() {
   // Wait for response
   uint32_t start = millis();
-  while (client_.available() < 7) {
+  while (client_->available() < 7) {
     if (millis() - start > 1000) {
       ESP_LOGE(TAG, "Response timeout");
       return false;
@@ -94,7 +95,7 @@ bool ModbusTcpClient::process_response_() {
 
   // Read Modbus TCP header
   uint8_t header[7];
-  client_.readBytes(header, 7);
+  client_->readBytes(header, 7);
 
   // Process header
   uint16_t length = (header[4] << 8) | header[5];
@@ -102,7 +103,7 @@ bool ModbusTcpClient::process_response_() {
 
   // Read response data
   std::vector<uint8_t> response(length);
-  uint32_t bytes_read = client_.readBytes(response.data(), length);
+  uint32_t bytes_read = client_->readBytes(response.data(), length);
   
   if (bytes_read != length) {
     ESP_LOGE(TAG, "Incomplete response");

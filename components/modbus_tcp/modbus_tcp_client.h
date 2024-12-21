@@ -1,8 +1,11 @@
 #pragma once
 
-#include "esphome.h"
-#include <vector>
+#include "esphome/core/component.h"
+#include "esphome/core/hal.h"
+#include "esphome/core/log.h"
 #include "esphome/components/ethernet/ethernet_component.h"
+#include <Client.h>
+#include <vector>
 
 namespace esphome {
 namespace modbus_tcp {
@@ -21,6 +24,7 @@ class ModbusTcpClient : public Component {
 
   float get_setup_priority() const override { return setup_priority::DATA; }
 
+  // Methods for reading/writing Modbus registers
   void read_coil(uint16_t address, uint16_t quantity);
   void read_discrete_input(uint16_t address, uint16_t quantity);
   void read_holding_register(uint16_t address, uint16_t quantity);
@@ -33,7 +37,7 @@ class ModbusTcpClient : public Component {
   uint16_t port_{502};  // Default Modbus TCP port
   uint32_t update_interval_{5000};  // Default update interval: 5 seconds
   uint32_t last_update_{0};
-  ethernet::EthernetClient client_;  // Changed from WiFiClient to EthernetClient
+  Client *client_{nullptr};
   uint16_t transaction_id_{0};
 
   bool connect_();
@@ -42,3 +46,6 @@ class ModbusTcpClient : public Component {
   bool process_response_();
   uint16_t calculate_crc_(const uint8_t *data, size_t length);
 };
+
+}  // namespace modbus_tcp
+}  // namespace esphome
