@@ -7,7 +7,12 @@ static const char *const TAG = "modbus_tcp";
 
 void ModbusTcpClient::setup() {
   ESP_LOGCONFIG(TAG, "Setting up Modbus TCP Client...");
-  this->client_ = new WiFiClient();
+  auto *eth = global_eth_component;
+  if (!eth->has_connected()) {
+    ESP_LOGW(TAG, "Ethernet not connected yet");
+    return;
+  }
+  this->client_ = eth->create_client();
   connect_();
 }
 

@@ -8,6 +8,13 @@
 #include <vector>
 
 namespace esphome {
+
+namespace ethernet {
+class EthernetComponent;
+}
+extern ethernet::EthernetComponent *global_eth_component;
+
+
 namespace modbus_tcp {
 
 class ModbusTcpClient : public Component {
