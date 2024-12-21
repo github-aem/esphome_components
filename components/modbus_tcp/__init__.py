@@ -2,9 +2,9 @@ import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome.const import CONF_ID, CONF_PORT, CONF_UPDATE_INTERVAL
 
-CONF_HOST= 'host'
+CONF_HOST = "host"  # Define our own host constant
 
-DEPENDENCIES = ['ethernet']
+DEPENDENCIES = ['ethernet']  # Changed from 'wifi' to 'ethernet'
 AUTO_LOAD = ['sensor']
 
 CODEOWNERS = ['@github-aem']

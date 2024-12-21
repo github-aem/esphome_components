@@ -2,6 +2,7 @@
 
 #include "esphome.h"
 #include <vector>
+#include "esphome/components/ethernet/ethernet_component.h"
 
 namespace esphome {
 namespace modbus_tcp {
@@ -32,7 +33,7 @@ class ModbusTcpClient : public Component {
   uint16_t port_{502};  // Default Modbus TCP port
   uint32_t update_interval_{5000};  // Default update interval: 5 seconds
   uint32_t last_update_{0};
-  WiFiClient client_{};
+  ethernet::EthernetClient client_;  // Changed from WiFiClient to EthernetClient
   uint16_t transaction_id_{0};
 
   bool connect_();
