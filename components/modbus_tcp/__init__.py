@@ -4,7 +4,7 @@ from esphome.const import CONF_ID, CONF_PORT, CONF_UPDATE_INTERVAL
 
 CONF_HOST= '192.168.1.5'
 
-DEPENDENCIES = ['wifi']
+DEPENDENCIES = ['ethernet']
 AUTO_LOAD = ['sensor']
 
 CODEOWNERS = ['@github-aem']
